@@ -1,0 +1,58 @@
+<template>
+  <Layout>
+    <!-- List posts -->
+    <div class="posts-list">
+      <PostCard
+        v-for="edge in $page.posts.edges"
+        :key="edge.node.id"
+        :post="edge.node"
+      />
+      <Pager :info="$page.posts.pageInfo" />
+    </div>
+  </Layout>
+</template>
+
+<page-query>
+query ($page: Int) {
+  posts: allPost(perPage: 10, page: $page, filter: { hide: { ne: true } }) @paginate {
+    pageInfo {
+      totalPages
+      currentPage
+    }
+    edges {
+      node {
+        id
+        title
+        slug
+        date (format: "YYYY-MM-DD")
+        timeToRead
+        desc
+        cover_image
+        path
+        hide
+        tags {
+          id
+          title
+          path
+        }
+      }
+    }
+  }
+}
+</page-query>
+
+<script>
+import PostCard from "~/components/PostCard.vue";
+import Pager from "~/components/Pager";
+
+export default {
+  components: {
+    PostCard,
+    Pager,
+  },
+  metaInfo: {
+    title: "Kyle's blog",
+    description: "Nơi mình chia sẽ kiến thức frontend, css, html, javascript, các framework như React, Vuejs",
+  },
+};
+</script>
